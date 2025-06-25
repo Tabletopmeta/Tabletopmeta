@@ -3,9 +3,15 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabaseClient'
 
+type Faction = {
+  id: string
+  name: string
+  system: string
+}
+
 export default function SubmitListPage() {
   const [system, setSystem] = useState('')
-  const [factions, setFactions] = useState<any[]>([])
+  const [factions, setFactions] = useState<Faction[]>([])
   const [selectedFaction, setSelectedFaction] = useState('')
   const [name, setName] = useState('')
   const [armyList, setArmyList] = useState('')
@@ -29,14 +35,14 @@ export default function SubmitListPage() {
       if (error) {
         console.error('Error fetching factions:', error.message)
       } else {
-        setFactions(data)
+        setFactions(data as Faction[])
       }
     }
 
     fetchFactions()
   }, [system])
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     const { error } = await supabase.from('lists').insert([
