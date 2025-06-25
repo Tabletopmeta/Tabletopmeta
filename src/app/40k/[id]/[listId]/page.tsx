@@ -1,6 +1,13 @@
 import { supabase } from '@/lib/supabaseClient'
 
-export default async function ListDetailPage({ params }: { params: { id: string; listId: string } }) {
+type PageProps = {
+  params: {
+    id: string
+    listId: string
+  }
+}
+
+export default async function ListDetailPage({ params }: PageProps) {
   const { data: list, error } = await supabase
     .from('lists')
     .select('*')
@@ -11,7 +18,6 @@ export default async function ListDetailPage({ params }: { params: { id: string;
     return <p className="text-red-500 p-4">Error loading list.</p>
   }
 
-  // Formatierung des Datums von ISO auf "02. June 2025"
   const createdAt = new Date(list.created_at)
   const formattedDate = createdAt.toLocaleDateString('en-GB', {
     day: '2-digit',
