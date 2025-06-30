@@ -1,13 +1,6 @@
 import { supabase } from '@/lib/supabaseClient'
 
-interface Props {
-  params: {
-    id: string
-    listId: string
-  }
-}
-
-export default async function ListDetailPage({ params }: Props) {
+export default async function ListDetailPage({ params }: { params: { id: string; listId: string } }) {
   const { data: list, error } = await supabase
     .from('lists')
     .select('*')
