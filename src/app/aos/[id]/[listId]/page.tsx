@@ -1,17 +1,17 @@
 import { supabase } from '@/lib/supabaseClient'
 
-type PageProps = {
-  params: {
-    id: string
-    listId: string
-  }
-}
+type ParamsPromise = Promise<{
+  id: string
+  listId: string
+}>
 
-export default async function ListDetailPage({ params }: PageProps) {
+export default async function ListDetailPage({ params }: { params: ParamsPromise }) {
+  const resolvedParams = await params
+
   const { data: list, error } = await supabase
     .from('lists')
     .select('*')
-    .eq('id', params.listId)
+    .eq('id', resolvedParams.listId)
     .single()
 
   if (error || !list) {
@@ -30,7 +30,7 @@ export default async function ListDetailPage({ params }: PageProps) {
       <h1 className="text-2xl md:text-3xl font-bold mb-4">{list.name}</h1>
 
       <div className="mb-6 space-y-2 text-sm md:text-base text-gray-300">
-        <p><strong>Faction:</strong> {params.id}</p>
+        <p><strong>Faction:</strong> {resolvedParams.id}</p>
         <p>
           <strong>Verified:</strong>{' '}
           {list.status === 'geprüft' ? (
